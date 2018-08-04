@@ -8,7 +8,7 @@ d:
 
 packages:
   - pkg-config
-  - liblapack-dev 
+  - liblapack-dev libblas-dev
 
 install:
   - pyenv global system 3.6
