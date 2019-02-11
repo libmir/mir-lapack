@@ -12,6 +12,7 @@ import mir.ndslice.slice;
 import mir.ndslice.topology: retro;
 import mir.ndslice.iterator;
 import mir.utility: min, max;
+import mir.internal.utility : realType, isComplex;
 
 static import lapack;
 
@@ -181,6 +182,7 @@ size_t gelsd_wq(T)(
 	Slice!(T*, 2, Canonical) b,
 	ref size_t liwork,
 	)
+	if(!isComplex!T)
 {
 	assert(b.length!1 == a.length!1);
 
@@ -203,10 +205,45 @@ size_t gelsd_wq(T)(
 	return cast(size_t) work;
 }
 
+
+/// ditto
+size_t gelsd_wq(T)(
+	Slice!(T*, 2, Canonical) a,
+	Slice!(T*, 2, Canonical) b,
+	ref size_t lrwork,
+	ref size_t liwork,
+	)
+	if(isComplex!T)
+{
+	assert(b.length!1 == a.length!1);
+
+	lapackint m = cast(lapackint) a.length!1;
+	lapackint n = cast(lapackint) a.length!0;
+	lapackint nrhs = cast(lapackint) b.length;
+	lapackint lda = cast(lapackint) a._stride.max(1);
+	lapackint ldb = cast(lapackint) b._stride.max(1);
+	realType!T rcond = void;
+	lapackint rank = void;
+	T work = void;
+	lapackint lwork = -1;
+	realType!T rwork = void;
+	lapackint iwork = void;
+	lapackint info = void;
+
+	lapack.gelsd_(m, n, nrhs, a.iterator, lda, b.iterator, ldb, null, rcond, rank, &work, lwork, &rwork, &iwork, info);
+	
+	assert(info == 0);
+	lrwork = cast(size_t)rwork;
+	liwork = iwork;
+	return cast(size_t) work;
+}
+
 unittest
 {
 	alias s = gelsd_wq!float;
 	alias d = gelsd_wq!double;
+	alias c = gelsd_wq!cfloat;
+	alias z = gelsd_wq!cdouble;
 }
 
 ///
@@ -219,6 +256,7 @@ size_t gelsd(T)(
 	Slice!(T*) work,
 	Slice!(lapackint*) iwork,
 	)
+	if(!isComplex!T)
 {
 	assert(b.length!1 == a.length!1);
 	assert(s.length == min(a.length!0, a.length!1));
@@ -239,10 +277,44 @@ size_t gelsd(T)(
 	return info;
 }
 
+/// ditto
+size_t gelsd(T)(
+	Slice!(T*, 2, Canonical) a,
+	Slice!(T*, 2, Canonical) b,
+	Slice!(realType!T*) s,
+	realType!T rcond,
+	ref size_t rank,
+	Slice!(T*) work,
+	Slice!(realType!T*) rwork,
+	Slice!(lapackint*) iwork,
+	)
+	if(isComplex!T)
+{
+	assert(b.length!1 == a.length!1);
+	assert(s.length == min(a.length!0, a.length!1));
+
+	lapackint m = cast(lapackint) a.length!1;
+	lapackint n = cast(lapackint) a.length!0;
+	lapackint nrhs = cast(lapackint) b.length;
+	lapackint lda = cast(lapackint) a._stride.max(1);
+	lapackint ldb = cast(lapackint) b._stride.max(1);
+	lapackint rank_ = void;
+	lapackint lwork = cast(lapackint) work.length;
+	lapackint info = void;
+
+	lapack.gelsd_(m, n, nrhs, a.iterator, lda, b.iterator, ldb, s.iterator, rcond, rank_, work.iterator, lwork, rwork.iterator, iwork.iterator, info);
+
+	assert(info >= 0);
+	rank = rank_;
+	return info;
+}
+
 unittest
 {
 	alias s = gelsd!float;
 	alias d = gelsd!double;
+	alias c = gelsd!cfloat;
+	alias z = gelsd!cdouble;
 }
 
 /// `gesdd` work space query
