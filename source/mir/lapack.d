@@ -434,7 +434,14 @@ size_t gesvd_wq(T)(
 	lapackint lwork = -1;
 	lapackint info = void;
 
-	lapack.gesvd_(jobu, jobvt, m, n, null, lda, null, null, ldu, null, ldvt, &work, lwork, info);
+	static if(!isComplex!T)
+	{
+		lapack.gesvd_(jobu, jobvt, m, n, null, lda, null, null, ldu, null, ldvt, &work, lwork, info);
+	}
+	else
+	{
+		lapack.gesvd_(jobu, jobvt, m, n, null, lda, null, null, ldu, null, ldvt, &work, lwork, null, info);
+	}
 
 	assert(info == 0);
 	return cast(size_t) work;
@@ -444,6 +451,8 @@ unittest
 {
 	alias s = gesvd_wq!float;
 	alias d = gesvd_wq!double;
+	alias c = gesvd_wq!cfloat;
+	alias z = gesvd_wq!cdouble;
 }
 
 ///
@@ -456,6 +465,7 @@ size_t gesvd(T)(
 	Slice!(T*, 2, Canonical) vt,
 	Slice!(T*) work,
 	)
+	if(!isComplex!T)
 {
 	lapackint m = cast(lapackint) a.length!1;
 	lapackint n = cast(lapackint) a.length!0;
@@ -471,10 +481,39 @@ size_t gesvd(T)(
 	return info;
 }
 
+/// ditto
+size_t gesvd(T)(
+	char jobu,
+	char jobvt,
+	Slice!(T*, 2, Canonical) a,
+	Slice!(realType!T*) s,
+	Slice!(T*, 2, Canonical) u,
+	Slice!(T*, 2, Canonical) vt,
+	Slice!(T*) work,
+	Slice!(realType!T*) rwork,
+	)
+	if(isComplex!T)
+{
+	lapackint m = cast(lapackint) a.length!1;
+	lapackint n = cast(lapackint) a.length!0;
+	lapackint lda = cast(lapackint) a._stride.max(1);
+	lapackint ldu = cast(lapackint) u._stride.max(1);
+	lapackint ldvt = cast(lapackint) vt._stride.max(1);
+	lapackint lwork = cast(lapackint) work.length;
+	lapackint info = void;
+
+	lapack.gesvd_(jobu, jobvt, m, n, a.iterator, lda, s.iterator, u.iterator, ldu, vt.iterator, ldvt, work.iterator, lwork, rwork.iterator, info);
+
+	assert(info >= 0);
+	return info;
+}
+
 unittest
 {
 	alias s = gesvd!float;
 	alias d = gesvd!double;
+	alias c = gesvd!cfloat;
+	alias z = gesvd!cdouble;
 }
 
 ///
