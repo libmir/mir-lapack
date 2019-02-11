@@ -46,6 +46,8 @@ unittest
 {
 	alias s = getri_wq!float;
 	alias d = getri_wq!double;
+	alias c = getri_wq!cfloat;
+	alias z = getri_wq!cdouble;
 }
 
 ///
@@ -74,6 +76,8 @@ unittest
 {
 	alias s = getri!float;
 	alias d = getri!double;
+	alias c = getri!cfloat;
+	alias z = getri!cdouble;
 }
 
 ///
@@ -99,6 +103,8 @@ unittest
 {
 	alias s = getrf!float;
 	alias d = getrf!double;
+	alias c = getrf!cfloat;
+	alias z = getrf!cdouble;
 }
 
 ///
@@ -600,6 +606,8 @@ unittest
 {
 	alias s = sytrf!float;
 	alias d = sytrf!double;
+	alias c = sytrf!cfloat;
+	alias z = sytrf!cdouble;
 }
 
 ///
@@ -627,6 +635,8 @@ unittest
 {
 	alias s = geqrf!float;
 	alias d = geqrf!double;
+	alias c = geqrf!cfloat;
+	alias z = geqrf!cdouble;
 }
 
 ///
@@ -658,6 +668,8 @@ unittest
 {
 	alias s = getrs!float;
 	alias d = getrs!double;
+	alias c = getrs!cfloat;
+	alias z = getrs!cdouble;
 }
 
 ///
@@ -687,6 +699,8 @@ unittest
 {
 	alias s = potrs!float;
 	alias d = potrs!double;
+	alias c = potrs!cfloat;
+	alias z = potrs!cdouble;
 }
 
 ///
@@ -718,6 +732,8 @@ unittest
 {
 	alias s = sytrs2!float;
 	alias d = sytrs2!double;
+	alias c = sytrs2!cfloat;
+	alias z = sytrs2!cdouble;
 }
 
 ///
@@ -748,6 +764,8 @@ version(none) unittest
 {
 	alias s = geqrs!float;
 	alias d = geqrs!double;
+	alias c = geqrs!cfloat;
+	alias z = geqrs!cdouble;
 }
 
 ///
@@ -777,6 +795,8 @@ unittest
 {
 	alias s = sysv_rook_wk!float;
 	alias d = sysv_rook_wk!double;
+	alias c = sysv_rook_wk!cfloat;
+	alias z = sysv_rook_wk!cdouble;
 }
 
 ///
@@ -809,6 +829,8 @@ unittest
 {
 	alias s = sysv_rook!float;
 	alias d = sysv_rook!double;
+	alias c = sysv_rook!cfloat;
+	alias z = sysv_rook!cdouble;
 }
 
 ///
@@ -950,6 +972,8 @@ unittest
 {
 	alias s = potrf!float;
 	alias d = potrf!double;
+	alias c = potrf!cfloat;
+	alias z = potrf!cdouble;
 }
 
 ///
@@ -1024,6 +1048,8 @@ unittest
 {
 	alias s = sptri!float;
 	alias d = sptri!double;
+	alias c = sptri!cfloat;
+	alias z = sptri!cdouble;
 }
 
 ///
@@ -1048,6 +1074,8 @@ unittest
 {
 	alias s = potri!float;
 	alias d = potri!double;
+	alias c = potri!cfloat;
+	alias z = potri!cdouble;
 }
 
 ///
@@ -1088,6 +1116,8 @@ unittest
 {
 	alias s = pptri!float;
 	alias d = pptri!double;
+	alias c = pptri!cfloat;
+	alias z = pptri!cdouble;
 }
 
 ///
@@ -1113,6 +1143,8 @@ unittest
 {
 	alias s = trtri!float;
 	alias d = trtri!double;
+	alias c = trtri!cfloat;
+	alias z = trtri!cdouble;
 }
 
 ///
@@ -1156,6 +1188,8 @@ unittest
 {
 	alias s = tptri!float;
 	alias d = tptri!double;
+	alias c = tptri!cfloat;
+	alias z = tptri!cdouble;
 }
 
 ///
