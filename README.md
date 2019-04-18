@@ -1,7 +1,7 @@
 # mir-lapack
 NDSLICE wrapper for LAPACK
 
-mir-lapack assumes that matrixes are passed in transposed form.
+mir-lapack assumes that matrixes are passed in the transposed form.
 Each (contiguous) row in a mir's matrix should store a (contiguous) column of a Fortran matrix.
 
 ## Required system libraries
