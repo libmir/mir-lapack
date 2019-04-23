@@ -1127,8 +1127,8 @@ template sptri(T)
 		)
     in
     {
-		assert(ipiv.length == ap.length, "sptri: The length of 'ipiv' must be equal to the length of 'ap'."
-		assert(work.length == ap.length, "sptri: The length of 'work' must be equal to the length of 'ap'."
+		assert(ipiv.length == ap.length, "sptri: The length of 'ipiv' must be equal to the length of 'ap'.");
+		assert(work.length == ap.length, "sptri: The length of 'work' must be equal to the length of 'ap'.");
     }
     do
 	{
