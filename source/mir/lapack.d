@@ -24,7 +24,7 @@ public import lapack: lapackint;
 size_t getri_wq(T)(Slice!(T*, 2, Canonical) a)
 in
 {
-    assert(a.length!0 == a.length!1, "getri: a must be a square matrix.");
+    assert(a.length!0 == a.length!1, "getri: The input 'a' must be a square matrix.");
 }
 do
 {
@@ -56,9 +56,8 @@ size_t getri(T)(
 	)
 in
 {
-	assert(a.length!0 == a.length!1, "getri: a must be a square matrix.");
-	assert(ipiv.length == a.length!0, "getri: The length of ipiv must be equal 
-                                              to the number of rows a.");
+	assert(a.length!0 == a.length!1, "getri: The input 'a' must be a square matrix.");
+	assert(ipiv.length == a.length!0, "getri: The length of 'ipiv' must be equal to the number of rows of 'a'.");
 	assert(work.length, "getri: work must have a non-zero length.");
 }
 do
@@ -89,10 +88,7 @@ size_t getrf(T)(
 	)
 in
 {
-    assert(ipiv.length == min(a.length!0, a.length!1), "getrf: The length of 
-                                                               ipiv must equal 
-                                                               the smaller of 
-                                                               a's dimensions");
+    assert(ipiv.length == min(a.length!0, a.length!1), "getrf: The length of 'ipiv' must equal the smaller of 'a''s dimensions");
 }
 do
 {
@@ -125,8 +121,7 @@ template sptrf(T)
 		)
     in
     {
-		assert(ipiv.length == ap.length, "sptrf: The length of ipiv must be 
-                                                 equal to the length ap.");
+		assert(ipiv.length == ap.length, "sptrf: The length of 'ipiv' must be equal to the length 'ap'.");
     }
     do
 	{
@@ -147,8 +142,7 @@ template sptrf(T)
 		)
     in
     {
-		assert(ipiv.length == ap.length, "sptrf: The length of ipiv must be 
-                                                 equal to the length ap.");
+		assert(ipiv.length == ap.length, "sptrf: The length of 'ipiv' must be equal to the length 'ap'.");
     }
     do
 	{
@@ -177,11 +171,9 @@ size_t gesv(T)(
 	)
 in
 {
-	assert(a.length!0 == a.length!1, "gesv: a must be a square matrix.");
-	assert(ipiv.length == a.length!0, "gesv: The length of ipiv must be equal to 
-                                             the number of rows a.");
-	assert(b.length!1 == a.length!0, "gesv: The number of columns of b must 
-                                            equal the number of rows of a");
+	assert(a.length!0 == a.length!1, "gesv: The input 'a' must be a square matrix.");
+	assert(ipiv.length == a.length!0, "gesv: The length of 'ipiv' must be equal to the number of rows of 'a'.");
+	assert(b.length!1 == a.length!0, "gesv: The number of columns of 'b' must equal the number of rows of 'a'");
 }
 do
 {
@@ -212,9 +204,7 @@ size_t gelsd_wq(T)(
 	if(!isComplex!T)
 in
 {
-    assert(b.length!1 == a.length!1, "gelsd_wq: The number of columns of b must 
-                                                equal the number of columns of 
-                                                a");
+    assert(b.length!1 == a.length!1, "gelsd_wq: The number of columns of 'b' must equal the number of columns of 'a'");
 }
 do
 {
@@ -248,9 +238,7 @@ size_t gelsd_wq(T)(
 	if(isComplex!T)
 in
 {
-    assert(b.length!1 == a.length!1, "gelsd_wq: The number of columns of b must 
-                                                equal the number of columns of 
-                                                a");
+    assert(b.length!1 == a.length!1, "gelsd_wq: The number of columns of 'b' must equal the number of columns of 'a'");
 }
 do
 {
@@ -296,13 +284,8 @@ size_t gelsd(T)(
 	if(!isComplex!T)
 in
 {
-	assert(b.length!1 == a.length!1, "gelsd: The number of columns of b must 
-                                             equal the number of columns of 
-                                             a");
-	assert(s.length == min(a.length!0, a.length!1), "gelsd: The length of s must
-                                                            equal the smaller of
-                                                            the dimensions of 
-                                                            a");
+	assert(b.length!1 == a.length!1, "gelsd: The number of columns of 'b' must equal the number of columns of 'a'");
+	assert(s.length == min(a.length!0, a.length!1), "gelsd: The length of 's' must equal the smaller of the dimensions of 'a'");
 }
 do
 {
@@ -336,13 +319,8 @@ size_t gelsd(T)(
 	if(isComplex!T)
 in
 {
-	assert(b.length!1 == a.length!1, "gelsd: The number of columns of b must 
-                                             equal the number of columns of 
-                                             a");
-	assert(s.length == min(a.length!0, a.length!1), "gelsd: The length of s must
-                                                            equal the smaller of
-                                                            the dimensions of 
-                                                            a");
+	assert(b.length!1 == a.length!1, "gelsd: The number of columns of 'b' must equal the number of columns of 'a'");
+	assert(s.length == min(a.length!0, a.length!1), "gelsd: The length of 's' must equal the smaller of the dimensions of 'a'");
 }
 do
 {
@@ -582,11 +560,8 @@ template spev(T)
 		)
     in
     {
-		assert(work.length == 3 * ap.length, "spev: The length of work must 
-                                                    equal three times the length
-                                                    of ap.");
-		assert(w.length == ap.length, "spev: The length of w must equal the 
-                                             length of ap.");
+		assert(work.length == 3 * ap.length, "spev: The length of 'work' must equal three times the length of 'ap'.");
+		assert(w.length == ap.length, "spev: The length of 'w' must equal the length of 'ap'.");
     }
     do
 	{
@@ -611,11 +586,8 @@ template spev(T)
 		)
     in
     {
-		assert(work.length == 3 * ap.length, "spev: The length of work must 
-                                                    equal three times the length
-                                                    of ap.");
-		assert(w.length == ap.length, "spev: The length of w must equal the 
-                                             length of ap.");
+		assert(work.length == 3 * ap.length, "spev: The length of 'work' must equal three times the length of 'ap'.");
+		assert(w.length == ap.length, "spev: The length of 'w' must equal the length of 'ap'.");
     }
     do
 	{
@@ -646,7 +618,7 @@ size_t sytrf(T)(
     )
 in
 {
-    assert(a.length!0 == a.length!1, "sytrf: a must be a square matrix.");
+    assert(a.length!0 == a.length!1, "sytrf: The input 'a' must be a square matrix.");
 }
 do
 {
@@ -681,19 +653,16 @@ size_t geqrf(T)(
     )
 in
 {
-    assert(a.length!0 >= 0, "geqrf: The number of columns of a must be greater 
-                                    than or equal to zero."); //n>=0
-    assert(a.length!1 >= a.length!0, "geqrf: The number of columns of a must be 
-                                             greater than or equal to the number
-                                             of rows."); //m>=n
-    assert(tau.length >= 0, "geqrf: tau must have length greater than or equal 
-                                    to zero."); //k>=0
-    assert(a.length!0 >= tau.length, "geqrf: The number of columns of a must be 
-                                             greater than or equal to the length
-                                             of tau."); //n>=k
-    assert(work.length >= a.length!0, "geqrf: The length of work must be greater
-                                              than or equal to the number of 
-                                              rows of a."); //lwork>=n
+    assert(a.length!0 >= 0, "geqrf: The number of columns of 'a' must be " ~ 
+        "greater than or equal to zero."); //n>=0
+    assert(a.length!1 >= a.length!0, "geqrf: The number of columns of 'a' " ~ 
+        "must be greater than or equal to the number of its rows."); //m>=n
+    assert(tau.length >= 0, "geqrf: The input 'tau' must have length greater " ~ 
+        "than or equal to zero."); //k>=0
+    assert(a.length!0 >= tau.length, "geqrf: The number of columns of 'a' " ~ 
+        "must be greater than or equal to the length of 'tau'."); //n>=k
+    assert(work.length >= a.length!0, "geqrf: The length of 'work' must be " ~ 
+        "greater than or equal to the number of rows of 'a'."); //lwork>=n
 }
 do
 {
@@ -728,9 +697,8 @@ size_t getrs(T)(
     )
 in
 {
-    assert(a.length!0 == a.length!1, "getrs: a must be a square matrix.");
-    assert(ipiv.length == a.length!0, "getrs: The length of ipiv must be equal
-                                              to the number of rows a.");
+    assert(a.length!0 == a.length!1, "getrs: The input 'a' must be a square matrix.");
+    assert(ipiv.length == a.length!0, "getrs: The length of 'ipiv' must be equal to the number of rows of 'a'.");
 }
 do
 {
@@ -764,7 +732,7 @@ size_t potrs(T)(
     )
 in
 {
-    assert(a.length!0 == a.length!1, "potrs: a must be a square matrix.");
+    assert(a.length!0 == a.length!1, "potrs: The input 'a' must be a square matrix.");
 }
 do
 {
@@ -800,7 +768,7 @@ size_t sytrs2(T)(
     )
 in
 {
-    assert(a.length!0 == a.length!1, "sytrs2: a must be a square matrix.");
+    assert(a.length!0 == a.length!1, "sytrs2: The input 'a' must be a square matrix.");
 }
 do
 {
@@ -835,19 +803,16 @@ size_t geqrs(T)(
     )
 in
 {
-    assert(a.length!0 >= 0, "geqrs: The number of columns of a must be greater 
-                                    than or equal to zero."); //n>=0
-    assert(a.length!1 >= a.length!0, "geqrs: The number of columns of a must be 
-                                             greater than or equal to the number
-                                             of rows."); //m>=n
-    assert(tau.length >= 0, "geqrs: tau must have length greater than or equal 
-                                    to zero."); //k>=0
-    assert(a.length!0 >= tau.length, "geqrs: The number of columns of a must be 
-                                             greater than or equal to the length
-                                             of tau."); //n>=k
-    assert(work.length >= a.length!0, "geqrs: The length of work must be greater
-                                              than or equal to the number of 
-                                              rows of a."); //lwork>=n
+    assert(a.length!0 >= 0, "geqrs: The number of columns of 'a' must be " ~ 
+        "greater than or equal to zero."); //n>=0
+    assert(a.length!1 >= a.length!0, "geqrs: The number of columns of 'a' " ~ 
+        "must be greater than or equal to the number of its rows."); //m>=n
+    assert(tau.length >= 0, "geqrs: The input 'tau' must have length greater " ~ 
+        "than or equal to zero."); //k>=0
+    assert(a.length!0 >= tau.length, "geqrs: The number of columns of 'a' " ~ 
+        "must be greater than or equal to the length of 'tau'."); //n>=k
+    assert(work.length >= a.length!0, "geqrs: The length of 'work' must be " ~ 
+        "greater than or equal to the number of rows of 'a'."); //lwork>=n
 }
 body
 {
@@ -883,11 +848,8 @@ size_t sysv_rook_wk(T)(
 	) 
 in
 {
-	assert(a.length!0 == a.length!1, "sysv_rook_wk: a must be a square
-                                                    matrix.");
-	assert(b.length!1 == a.length!0, "sysv_rook_wk: The number of columns of b 
-                                                    must equal the number of 
-                                                    rows of a.");
+	assert(a.length!0 == a.length!1, "sysv_rook_wk: The input 'a' must be a square matrix.");
+	assert(b.length!1 == a.length!0, "sysv_rook_wk: The number of columns of 'b' must equal the number of rows of 'a'.");
 }
 do
 {
@@ -922,13 +884,9 @@ size_t sysv_rook(T)(
 	)
 in
 {
-	assert(a.length!0 == a.length!1, "sysv_rook: a must be a square matrix.");
-	assert(ipiv.length == a.length!0, "sysv_rook: The length of ipiv must be
-                                                  equal to the number of rows
-                                                  a");
-	assert(b.length!1 == a.length!0, "sysv_rook: The number of columns of b must
-                                                 equal the number of rows of
-                                                 a.");
+	assert(a.length!0 == a.length!1, "sysv_rook: The input 'a' must be a square matrix.");
+	assert(ipiv.length == a.length!0, "sysv_rook: The length of 'ipiv' must be equal to the number of rows of 'a'");
+	assert(b.length!1 == a.length!0, "sysv_rook: The number of columns of 'b' must equal the number of rows of 'a'.");
 }
 do
 {
@@ -962,9 +920,8 @@ size_t syev_wk(T)(
 	)
 in
 {
-	assert(a.length!0 == a.length!1, "syev_wk: a must be a square matrix.");
-	assert(w.length == a.length!0, "syev_wk: The length of w must equal the 
-                                             number of rows of a.");
+	assert(a.length!0 == a.length!1, "syev_wk: The input 'a' must be a square matrix.");
+	assert(w.length == a.length!0, "syev_wk: The length of 'w' must equal the number of rows of 'a'.");
 }
 do
 {
@@ -995,9 +952,8 @@ size_t syev(T)(
 	)
 in
 {
-	assert(a.length!0 == a.length!1, "syev: a must be a square matrix.");
-	assert(w.length == a.length!0, "syev: The length of w must equal the number
-                                          of rows of a.");
+	assert(a.length!0 == a.length!1, "syev: The input 'a' must be a square matrix.");
+	assert(w.length == a.length!0, "syev: The length of 'w' must equal the number of rows of 'a'.");
 }
 do
 {
@@ -1027,10 +983,8 @@ size_t syev_2stage_wk(T)(
 	)
 in
 {
-	assert(a.length!0 == a.length!1, "syev_2stage_wk: a must be a square 
-                                                      matrix.");
-	assert(w.length == a.length, "syev_2stage_wk: The length of w must equal the
-                                                  number of rows of a.");
+	assert(a.length!0 == a.length!1, "syev_2stage_wk: The input 'a' must be a square matrix.");
+	assert(w.length == a.length, "syev_2stage_wk: The length of 'w' must equal the number of rows of 'a'.");
 }
 do
 {
@@ -1062,9 +1016,8 @@ size_t syev_2stage(T)(
 	)
 in
 {
-	assert(a.length!0 == a.length!1, "syev_2stage: a must be a square matrix.");
-	assert(w.length == a.length, "syev_2stage: The length of w must equal the
-                                               number of rows of a.");
+	assert(a.length!0 == a.length!1, "syev_2stage: The input 'a' must be a square matrix.");
+	assert(w.length == a.length, "syev_2stage: The length of 'w' must equal the number of rows of 'a'.");
 }
 do
 {
@@ -1093,7 +1046,7 @@ size_t potrf(T)(
        )
 in
 {
-    assert(a.length!0 == a.length!1, "potrf: a must be a square matrix.");
+    assert(a.length!0 == a.length!1, "potrf: The input 'a' must be a square matrix.");
 }
 do
 {
@@ -1151,10 +1104,8 @@ template sptri(T)
 		)
     in
     {
-		assert(ipiv.length == ap.length, "sptri: The length of ipiv must be 
-                                                 equal to the length of ap.");
-		assert(work.length == ap.length, "sptri: The length of work must be 
-                                                 equal to the length of ap.");
+		assert(ipiv.length == ap.length, "sptri: The length of 'ipiv' must be equal to the length of 'ap'.");
+		assert(work.length == ap.length, "sptri: The length of 'work' must be equal to the length of 'ap'.");
     }
     do
 	{
@@ -1176,10 +1127,8 @@ template sptri(T)
 		)
     in
     {
-		assert(ipiv.length == ap.length, "sptri: The length of ipiv must be 
-                                                 equal to the length of ap."
-		assert(work.length == ap.length, "sptri: The length of work must be 
-                                                 equal to the length of ap."
+		assert(ipiv.length == ap.length, "sptri: The length of 'ipiv' must be equal to the length of 'ap'."
+		assert(work.length == ap.length, "sptri: The length of 'work' must be equal to the length of 'ap'."
     }
     do
 	{
@@ -1209,7 +1158,7 @@ size_t potri(T)(
 	)
 in
 {
-    assert(a.length!0 == a.length!1, "potri: a must be a square matrix.");
+    assert(a.length!0 == a.length!1, "potri: The input 'a' must be a square matrix.");
 }
 do
 {
@@ -1281,7 +1230,7 @@ size_t trtri(T)(
 	)
 in
 {
-    assert(a.length!0 == a.length!1, "trtri: a must be a square matrix.");
+    assert(a.length!0 == a.length!1, "trtri: The input 'a' must be a square matrix.");
 }
 do
 {
@@ -1420,19 +1369,16 @@ size_t orgqr(T)(
     )
 in
 {
-    assert(a.length!0 >= 0, "orgqr: The number of columns of a must be greater 
-                                    than or equal to zero."); //n>=0
-    assert(a.length!1 >= a.length!0, "orgqr: The number of columns of a must be 
-                                             greater than or equal to the number
-                                             of rows."); //m>=n
-    assert(tau.length >= 0, "orgqr: tau must have length greater than or equal 
-                                    to zero."); //k>=0
-    assert(a.length!0 >= tau.length, "orgqr: The number of columns of a must be 
-                                             greater than or equal to the length
-                                             of tau."); //n>=k
-    assert(work.length >= a.length!0, "orgqr: The length of work must be greater
-                                              than or equal to the number of 
-                                              rows of a."); //lwork>=n
+    assert(a.length!0 >= 0, "orgqr: The number of columns of 'a' must be " ~ 
+        "greater than or equal to zero."); //n>=0
+    assert(a.length!1 >= a.length!0, "orgqr: The number of columns of 'a' " ~ 
+        "must be greater than or equal to the number of its rows."); //m>=n
+    assert(tau.length >= 0, "orgqr: The input 'tau' must have length greater " ~ 
+        "than or equal to zero."); //k>=0
+    assert(a.length!0 >= tau.length, "orgqr: The number of columns of 'a' " ~ 
+        "must be greater than or equal to the length of 'tau'."); //n>=k
+    assert(work.length >= a.length!0, "orgqr: The length of 'work' must be " ~ 
+        "greater than or equal to the number of rows of 'a'."); //lwork>=n
 }
 do
 {
@@ -1465,19 +1411,16 @@ size_t ungqr(T)(
     )
 in
 {
-    assert(a.length!0 >= 0, "ungqr: The number of columns of a must be greater 
-                                    than or equal to zero."); //n>=0
-    assert(a.length!1 >= a.length!0, "ungqr: The number of columns of a must be 
-                                             greater than or equal to the number
-                                             of rows."); //m>=n
-    assert(tau.length >= 0, "ungqr: tau must have length greater than or equal 
-                                    to zero."); //k>=0
-    assert(a.length!0 >= tau.length, "ungqr: The number of columns of a must be 
-                                             greater than or equal to the length
-                                             of tau."); //n>=k
-    assert(work.length >= a.length!0, "ungqr: The length of work must be greater
-                                              than or equal to the number of 
-                                              rows of a."); //lwork>=n
+    assert(a.length!0 >= 0, "ungqr: The number of columns of 'a' must be " ~ 
+        "greater than or equal to zero."); //n>=0
+    assert(a.length!1 >= a.length!0, "ungqr: The number of columns of 'a' " ~ 
+        "must be greater than or equal to the number of its rows."); //m>=n
+    assert(tau.length >= 0, "ungqr: The input 'tau' must have length greater " ~ 
+        "than or equal to zero."); //k>=0
+    assert(a.length!0 >= tau.length, "ungqr: The number of columns of 'a' " ~ 
+        "must be greater than or equal to the length of 'tau'."); //n>=k
+    assert(work.length >= a.length!0, "ungqr: The length of 'work' must be " ~ 
+        "greater than or equal to the number of rows of 'a'."); //lwork>=n
 }
 do
 {
