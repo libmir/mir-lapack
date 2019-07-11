@@ -1484,42 +1484,6 @@ unittest
 }
 
 ///
-size_t ungqr(T)(
-    Slice!(T*, 2, Canonical) a,
-    Slice!(T*) tau,
-    Slice!(T*) work,
-)
-in
-{
-    assert(a.length!1 >= a.length!0); //m>=n
-    assert(a.length!0 >= tau.length); //n>=k
-    assert(work.length >= a.length!0); //lwork>=n
-}
-do
-{
-    lapackint m = cast(lapackint) a.length!1;
-    lapackint n = cast(lapackint) a.length!0;
-    lapackint k = cast(lapackint) tau.length;
-    lapackint lda = cast(lapackint) a._stride.max(1);
-    lapackint lwork = cast(lapackint) work.length;
-    lapackint info = void;
-
-    lapack.ungqr_(m, n, k, a.iterator, lda, tau.iterator, work.iterator, lwork, info);
-
-    ///if info == 0: successful exit.
-    ///if info < 0: if info == -i, the i-th argument had an illegal value.
-    assert(info >= 0);
-    return cast(size_t)info;
-}
-
-unittest
-{
-    alias s = ungqr!cfloat;
-    alias d = ungqr!cdouble;
-}
-
-
-///
 size_t gehrd(T)(
     Slice!(T*, 2, Canonical) a,
     Slice!(T*) tau,
@@ -1638,7 +1602,7 @@ size_t hsein(T, realT)(
     lapackint* ilo,
     lapackint* ihi,
 )
-    if (isComplex!T && realType!T == realT)
+    if (isComplex!T && is(realType!T == realT))
 in
 {
     assert(h.length!1 >= h.length!0, "hsein: The number of columns of 'h' " ~ 
@@ -1764,7 +1728,7 @@ size_t hseqr(T, complexT)(
     lapackint* ilo,
     lapackint* ihi
  )
-    if (!isComplex!T && realType!complexT == T)
+    if (!isComplex!T && is(realType!complexT == T))
 do
 {
     lapackint n = cast(lapackint) h.length!0;
@@ -1791,7 +1755,7 @@ size_t hseqr(T, complexT)(
     lapackint* ilo,
     lapackint* ihi
 )
-    if ((isComplex!T && T == complexT) || (!isComplex!T && T == realType!complexT))
+    if ((isComplex!T && is(T == complexT)) || (!isComplex!T && is(T == realType!complexT))
 in
 {
     assert(job == 'E' || job == 'S', "hseqr");
@@ -1877,7 +1841,7 @@ size_t gebal(T, realT)(char job,
     lapackint* ihi,
     Slice!(realT*) scale
 )
-    if (!isComplex!T || (isComplex!T && realType!T == realT))
+    if (!isComplex!T || (isComplex!T && is(realType!T == realT)))
 {
     lapackint n = cast(lapackint) a.length!0;
     lapackint lda = cast(lapackint) a._stride.max(1);
@@ -1903,7 +1867,7 @@ size_t gebak(T, realT)(
     Slice!(realT*) scale,
     Slice!(T*, 2, Canonical) v
 )
-    if (!isComplex!T || (isComplex!T && realType!T == realT))
+    if (!isComplex!T || (isComplex!T && is(realType!T == realT)))
 {
     lapackint n = cast(lapackint) scale.length!0;
     lapackint m = cast(lapackint) v.length!1;//num evects
@@ -1932,7 +1896,7 @@ size_t geev(T, realT)(
     Slice!(T*) work,
     Slice!(realT*) rwork
 )
-    if (isComplex!T && realType!T == realT)
+    if (isComplex!T && is(realType!T == realT))
 {
     lapackint n = cast(lapackint) a.length!0;
     lapackint lda = cast(lapackint) a._stride.max(1);
