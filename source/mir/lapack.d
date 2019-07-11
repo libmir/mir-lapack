@@ -88,7 +88,7 @@ size_t getrf(T)(
 	)
 in
 {
-    assert(ipiv.length == min(a.length!0, a.length!1), "getrf: The length of 'ipiv' must equal the smaller of 'a''s dimensions");
+    assert(ipiv.length >= min(a.length!0, a.length!1), "getrf: The length of 'ipiv' must be at least the smaller of 'a''s dimensions");
 }
 do
 {
@@ -1411,16 +1411,9 @@ size_t ungqr(T)(
     )
 in
 {
-    assert(a.length!0 >= 0, "ungqr: The number of columns of 'a' must be " ~ 
-        "greater than or equal to zero."); //n>=0
-    assert(a.length!1 >= a.length!0, "ungqr: The number of columns of 'a' " ~ 
-        "must be greater than or equal to the number of its rows."); //m>=n
-    assert(tau.length >= 0, "ungqr: The input 'tau' must have length greater " ~ 
-        "than or equal to zero."); //k>=0
-    assert(a.length!0 >= tau.length, "ungqr: The number of columns of 'a' " ~ 
-        "must be greater than or equal to the length of 'tau'."); //n>=k
-    assert(work.length >= a.length!0, "ungqr: The length of 'work' must be " ~ 
-        "greater than or equal to the number of rows of 'a'."); //lwork>=n
+    assert(a.length!1 >= a.length!0, "ungqr: The number of columns of 'a' must be greater than or equal to the number of its rows."); //m>=n
+    assert(a.length!0 >= tau.length, "ungqr: The number of columns of 'a' must be greater than or equal to the length of 'tau'."); //n>=k
+    assert(work.length >= a.length!0, "ungqr: The length of 'work' must be greater than or equal to the number of rows of 'a'."); //lwork>=n
 }
 do
 {
@@ -1449,15 +1442,13 @@ alias orghr = unghr; // this is the name for the real type vairant of ungqr
 
 ///
 size_t unghr(T)(
-                Slice!(T*, 2, Canonical) a,
-                Slice!(T*) tau,
-                Slice!(T*) work,
-                )
+    Slice!(T*, 2, Canonical) a,
+    Slice!(T*) tau,
+    Slice!(T*) work,
+)
 in
 {
-    assert(a.length!0 >= 0); //n>=0
     assert(a.length!1 >= a.length!0); //m>=n
-    assert(tau.length >= 0); //k>=0
     assert(a.length!0 >= tau.length); //n>=k
     assert(work.length >= a.length!0); //lwork>=n
 }
@@ -1494,15 +1485,13 @@ unittest
 
 ///
 size_t ungqr(T)(
-                Slice!(T*, 2, Canonical) a,
-                Slice!(T*) tau,
-                Slice!(T*) work,
-                )
+    Slice!(T*, 2, Canonical) a,
+    Slice!(T*) tau,
+    Slice!(T*) work,
+)
 in
 {
-    assert(a.length!0 >= 0); //n>=0
     assert(a.length!1 >= a.length!0); //m>=n
-    assert(tau.length >= 0); //k>=0
     assert(a.length!0 >= tau.length); //n>=k
     assert(work.length >= a.length!0); //lwork>=n
 }
@@ -1532,24 +1521,17 @@ unittest
 
 ///
 size_t gehrd(T)(
-                Slice!(T*, 2, Canonical) a,
-                Slice!(T*) tau,
-                Slice!(T*) work,
-                lapackint* ilo,
-                lapackint* ihi
-                )
+    Slice!(T*, 2, Canonical) a,
+    Slice!(T*) tau,
+    Slice!(T*) work,
+    lapackint* ilo,
+    lapackint* ihi
+)
 in
 {
-    assert(a.length!0 >= 0, "gehrd: The number of columns of 'a' must be " ~ 
-           "greater than or equal to zero."); //n>=0
-    assert(a.length!1 >= a.length!0, "gehrd: The number of columns of 'a' " ~ 
-           "must be greater than or equal to the number of its rows."); //m>=n
-    assert(tau.length >= 0, "gehrd: The input 'tau' must have length greater " ~ 
-           "than or equal to zero."); //k>=0
-    assert(a.length!0 >= tau.length, "gehrd: The number of columns of 'a' " ~ 
-           "must be greater than or equal to the length of 'tau'."); //n>=k
-    assert(work.length >= a.length!0, "gehrd: The length of 'work' must be " ~ 
-           "greater than or equal to the number of rows of 'a'."); //lwork>=n
+    assert(a.length!1 >= a.length!0, "gehrd: The number of columns of 'a' must be greater than or equal to the number of its rows."); //m>=n
+    assert(a.length!0 >= tau.length, "gehrd: The number of columns of 'a' must be greater than or equal to the length of 'tau'."); //n>=k
+    assert(work.length >= a.length!0, "gehrd: The length of 'work' must be greater than or equal to the number of rows of 'a'."); //lwork>=n
 }
 do
 {
@@ -1570,28 +1552,26 @@ unittest
     alias d = gehrd!cdouble;
 }
 
-size_t rhsein(T)(
-                char side,
-                char eigsrc,
-                char initv,
-                lapackint* select, //actually a logical bitset stored in here
-                Slice!(T*, 2, Canonical) h,
-                Slice!(T*) wr,
-                Slice!(T*) wi,
-                Slice!(T*, 2, Canonical) vl,
-                Slice!(T*, 2, Canonical) vr,
-                lapackint* m,
-                Slice!(T*) work,
-                lapackint* ifaill,
-                lapackint* ifailr,
-                lapackint* ilo,
-                lapackint* ihi,
-                )
-if(!isComplex!T)
+size_t hsein(T)(
+    char side,
+    char eigsrc,
+    char initv,
+    lapackint* select, //actually a logical bitset stored in here
+    Slice!(T*, 2, Canonical) h,
+    Slice!(T*) wr,
+    Slice!(T*) wi,
+    Slice!(T*, 2, Canonical) vl,
+    Slice!(T*, 2, Canonical) vr,
+    lapackint* m,
+    Slice!(T*) work,
+    lapackint* ifaill,
+    lapackint* ifailr,
+    lapackint* ilo,
+    lapackint* ihi,
+)
+    if (!isComplex!T)
 in
 {
-    assert(h.length!0 >= 0, "hsein: The number of columns of 'h' must be " ~ 
-           "greater than or equal to zero."); //n>=0
     assert(h.length!1 >= h.length!0, "hsein: The number of columns of 'h' " ~ 
            "must be greater than or equal to the number of its rows."); //m>=n
     assert(wr.length >= 1, "hsein: The input 'wr' must have length greater " ~ 
@@ -1623,7 +1603,8 @@ in
     assert(side != 'L' || vl.length!1 >= 1, "hsein: Slice 'vr' must be" ~
            "length greater than 1 when 'side' is 'L'.");
 }
-do {
+do 
+{
     lapackint info;
     lapackint mm = cast(lapackint) vl.length!1;
     lapackint n = cast(lapackint) h.length!0;
@@ -1640,28 +1621,26 @@ do {
     return info;
 }
 
-size_t chsein(T, realT)(
-                 char side,
-                 char eigsrc,
-                 char initv,
-                 lapackint* select, //actually a logical bitset stored in here
-                 Slice!(T*, 2, Canonical) h,
-                 Slice!(T*) w,
-                 Slice!(T*, 2, Canonical) vl,
-                 Slice!(T*, 2, Canonical) vr,
-                 lapackint* m,
-                 Slice!(T*) work,
-                 Slice!(realT*) rwork,
-                 lapackint* ifaill,
-                 lapackint* ifailr,
-                 lapackint* ilo,
-                 lapackint* ihi,
-                 )
-if(isComplex!T)
+size_t hsein(T, realT)(
+    char side,
+    char eigsrc,
+    char initv,
+    lapackint* select, //actually a logical bitset stored in here
+    Slice!(T*, 2, Canonical) h,
+    Slice!(T*) w,
+    Slice!(T*, 2, Canonical) vl,
+    Slice!(T*, 2, Canonical) vr,
+    lapackint* m,
+    Slice!(T*) work,
+    Slice!(realT*) rwork,
+    lapackint* ifaill,
+    lapackint* ifailr,
+    lapackint* ilo,
+    lapackint* ihi,
+)
+    if (isComplex!T && realType!T == realT)
 in
 {
-    assert(h.length!0 >= 0, "hsein: The number of columns of 'h' must be " ~ 
-           "greater than or equal to zero."); //n>=0
     assert(h.length!1 >= h.length!0, "hsein: The number of columns of 'h' " ~ 
            "must be greater than or equal to the number of its rows."); //m>=n
     assert(w.length >= 1, "hsein: The input 'w' must have length greater " ~ 
@@ -1717,15 +1696,15 @@ alias ormhr = unmhr;
 
 ///
 size_t unmhr(T)(
-                char side,
-                char trans,
-                Slice!(T*, 2, Canonical) a,
-                Slice!(T*) tau,
-                Slice!(T*, 2, Canonical) c,
-                Slice!(T*) work,
-                lapackint* ilo,
-                lapackint* ihi
-                )
+    char side,
+    char trans,
+    Slice!(T*, 2, Canonical) a,
+    Slice!(T*) tau,
+    Slice!(T*, 2, Canonical) c,
+    Slice!(T*) work,
+    lapackint* ilo,
+    lapackint* ihi
+)
 in
 {
     assert(a.length!0 >= 0, "ormhr: The number of columns of 'a' must be " ~ 
@@ -1775,18 +1754,19 @@ unittest
     alias b = ormhr!float;
 }
 
-size_t rhseqr(T, complexT)(
-                char job,
-                char compz,
-                Slice!(T*, 2, Canonical) h,
-                Slice!(complexT*) w,
-                Slice!(T*, 2, Canonical) z,
-                Slice!(T*) work,
-                lapackint* ilo,
-                lapackint* ihi
-                )
-if(!isComplex!T)
-do {
+size_t hseqr(T, complexT)(
+    char job,
+    char compz,
+    Slice!(T*, 2, Canonical) h,
+    Slice!(complexT*) w,
+    Slice!(T*, 2, Canonical) z,
+    Slice!(T*) work,
+    lapackint* ilo,
+    lapackint* ihi
+ )
+    if (!isComplex!T && realType!complexT == T)
+do
+{
     lapackint n = cast(lapackint) h.length!0;
     lapackint ldh = cast(lapackint) h._stride.max(1);
     lapackint ldz = cast(lapackint) z._stride.max(1);
@@ -1802,17 +1782,18 @@ do {
 }
 
 size_t hseqr(T, complexT)(
-                char job,
-                char compz,
-                Slice!(T*, 2, Canonical) h,
-                Slice!(complexT*) w,
-                Slice!(T*, 2, Canonical) z,
-                Slice!(T*) work,
-                lapackint* ilo,
-                lapackint* ihi
-                )
-//if((isComplex!T && is(T == complexT)) || (!isComplex!T && is(T == realType!complexT)))
-in {
+    char job,
+    char compz,
+    Slice!(T*, 2, Canonical) h,
+    Slice!(complexT*) w,
+    Slice!(T*, 2, Canonical) z,
+    Slice!(T*) work,
+    lapackint* ilo,
+    lapackint* ihi
+)
+    if ((isComplex!T && T == complexT) || (!isComplex!T && T == realType!complexT))
+in
+{
     assert(job == 'E' || job == 'S', "hseqr");
     assert(compz == 'N' || compz == 'I' || compz == 'V', "hseqr");
     assert(h.length!1 >= h.length!0, "hseqr");
@@ -1822,7 +1803,8 @@ in {
     assert(work.length!0 >= 1, "hseqr");
     assert(work.length!0 >= h.length!0, "hseqr");
 }
-do {
+do
+{
     lapackint n = cast(lapackint) h.length!0;
     lapackint ldh = cast(lapackint) h._stride.max(1);
     lapackint ldz = cast(lapackint) z._stride.max(1);
@@ -1834,7 +1816,7 @@ do {
     }
     else
     {
-        rhseqr!(T,complexT)(job, compz, h, w.lightScope, z, work, ilo, ihi);
+        hseqr!(T,complexT)(job, compz, h, w.lightScope, z, work, ilo, ihi);
     }
     assert(info >= 0);
     return cast(size_t)info;
@@ -1849,14 +1831,16 @@ unittest
 }
 
 size_t trevc(T)(char side,
-                char howmany,
-                lapackint select,
-                Slice!(T*, 2, Canonical) t,
-                Slice!(T*, 2, Canonical) vl,
-                Slice!(T*, 2, Canonical) vr,
-                lapackint* m,
-                Slice!(T*) work,)
-do {
+    char howmany,
+    lapackint select,
+    Slice!(T*, 2, Canonical) t,
+    Slice!(T*, 2, Canonical) vl,
+    Slice!(T*, 2, Canonical) vr,
+    lapackint* m,
+    Slice!(T*) work
+)
+do
+{
     lapackint n = cast(lapackint)t.length!0;
     lapackint ldt = cast(lapackint) t._stride.max(1);
     lapackint ldvl = cast(lapackint) vl._stride.max(1);
@@ -1888,10 +1872,12 @@ alias complexType(T : real) = creal;
 alias complexType(T : isComplex!T) = T;
 
 size_t gebal(T, realT)(char job,
-                Slice!(T*, 2, Canonical) a,
-                lapackint* ilo,
-                lapackint* ihi,
-                Slice!(realT*) scale)
+    Slice!(T*, 2, Canonical) a,
+    lapackint* ilo,
+    lapackint* ihi,
+    Slice!(realT*) scale
+)
+    if (!isComplex!T || (isComplex!T && realType!T == realT))
 {
     lapackint n = cast(lapackint) a.length!0;
     lapackint lda = cast(lapackint) a._stride.max(1);
@@ -1901,7 +1887,8 @@ size_t gebal(T, realT)(char job,
     return cast(size_t)info;
 }
 
-unittest {
+unittest
+{
     alias a = gebal!(double,double);
     alias b = gebal!(cdouble,double);
     alias c = gebal!(float,float);
@@ -1909,12 +1896,14 @@ unittest {
 }
 
 size_t gebak(T, realT)(
-                char job,
-                char side,
-                lapackint* ilo,
-                lapackint* ihi,
-                Slice!(realT*) scale,
-                Slice!(T*, 2, Canonical) v)
+    char job,
+    char side,
+    lapackint* ilo,
+    lapackint* ihi,
+    Slice!(realT*) scale,
+    Slice!(T*, 2, Canonical) v
+)
+    if (!isComplex!T || (isComplex!T && realType!T == realT))
 {
     lapackint n = cast(lapackint) scale.length!0;
     lapackint m = cast(lapackint) v.length!1;//num evects
@@ -1925,7 +1914,8 @@ size_t gebak(T, realT)(
     return cast(size_t)info;
 }
 
-unittest {
+unittest
+{
     alias a = gebak!(double,double);
     alias b = gebak!(cdouble,double);
     alias c = gebak!(float,float);
@@ -1933,15 +1923,16 @@ unittest {
 }
 
 size_t geev(T, realT)(
-               char jobvl,
-               char jobvr,
-               Slice!(T*, 2, Canonical) a,
-               Slice!(T*) w,
-               Slice!(T*, 2, Canonical) vl,
-               Slice!(T*, 2, Canonical) vr,
-               Slice!(T*) work,
-               Slice!(realT*) rwork)
-if(isComplex!T)
+    char jobvl,
+    char jobvr,
+    Slice!(T*, 2, Canonical) a,
+    Slice!(T*) w,
+    Slice!(T*, 2, Canonical) vl,
+    Slice!(T*, 2, Canonical) vr,
+    Slice!(T*) work,
+    Slice!(realT*) rwork
+)
+    if (isComplex!T && realType!T == realT)
 {
     lapackint n = cast(lapackint) a.length!0;
     lapackint lda = cast(lapackint) a._stride.max(1);
@@ -1954,16 +1945,16 @@ if(isComplex!T)
     return info;
 }
 size_t geev(T)(
-               char jobvl,
-               char jobvr,
-               Slice!(T*, 2, Canonical) a,
-               Slice!(T*) wr,
-               Slice!(T*) wi,
-               Slice!(T*, 2, Canonical) vl,
-               Slice!(T*, 2, Canonical) vr,
-               Slice!(T*) work
-                   )
-if(!isComplex!T)
+    char jobvl,
+    char jobvr,
+    Slice!(T*, 2, Canonical) a,
+    Slice!(T*) wr,
+    Slice!(T*) wi,
+    Slice!(T*, 2, Canonical) vl,
+    Slice!(T*, 2, Canonical) vr,
+    Slice!(T*) work
+)
+    if (!isComplex!T)
 {
     lapackint n = cast(lapackint) a.length!0;
     lapackint lda = cast(lapackint) a._stride.max(1);
