@@ -1718,17 +1718,17 @@ unittest
     alias b = ormhr!float;
 }
 
-size_t hseqr(T, complexT)(
+size_t hseqr(T)(
     char job,
     char compz,
     Slice!(T*, 2, Canonical) h,
-    Slice!(complexT*) w,
+    Slice!(T*) w,
     Slice!(T*, 2, Canonical) z,
     Slice!(T*) work,
     lapackint* ilo,
     lapackint* ihi
 )
-    if ((isComplex!T && is(T == complexT)) || (!isComplex!T && is(T == realType!complexT)))
+    if (isComplex!T)
 in
 {
     assert(job == 'E' || job == 'S', "hseqr");
@@ -1747,27 +1747,52 @@ do
     lapackint ldz = cast(lapackint) z._stride.max(1);
     lapackint lwork = cast(lapackint) work.length!0;
     lapackint info;
-    static if(isComplex!T)
-    {
-        lapack.hseqr_(job,compz,n,ilo,ihi,h.iterator, ldh, w.iterator, z.iterator, ldz, work.iterator, lwork, info);
-    }
-    else
-    {
-    	auto wr = mininitRcslice!T(w.length);
-    	auto wi = mininitRcslice!T(w.length);
-    	lapack.hseqr_(job,compz,n,ilo,ihi,h.iterator, ldh, wr.lightScope.iterator, wi.lightScope.iterator, z.iterator, ldz, work.iterator, lwork, info);
-    	w[] = wr[] + (1i * wi[]);
-    }
+    lapack.hseqr_(job,compz,n,ilo,ihi,h.iterator, ldh, w.iterator, z.iterator, ldz, work.iterator, lwork, info);
+    assert(info >= 0);
+    return cast(size_t)info;
+}
+
+size_t hseqr(T)(
+    char job,
+    char compz,
+    Slice!(T*, 2, Canonical) h,
+    Slice!(T*) wr,
+    Slice!(T*) wi,
+    Slice!(T*, 2, Canonical) z,
+    Slice!(T*) work,
+    lapackint* ilo,
+    lapackint* ihi
+)
+    if (!isComplex!T)
+in
+{
+    assert(job == 'E' || job == 'S', "hseqr");
+    assert(compz == 'N' || compz == 'I' || compz == 'V', "hseqr");
+    assert(h.length!1 >= h.length!0, "hseqr");
+    assert(h.length!1 >= 1, "hseqr");
+    assert(compz != 'V' || compz != 'I' || (z.length!1 >= h.length!0 && z.length!1 >= 1), "hseqr");
+    assert(compz != 'N' || z.length!1 >= 1);
+    assert(work.length!0 >= 1, "hseqr");
+    assert(work.length!0 >= h.length!0, "hseqr");
+}
+do
+{
+    lapackint n = cast(lapackint) h.length!0;
+    lapackint ldh = cast(lapackint) h._stride.max(1);
+    lapackint ldz = cast(lapackint) z._stride.max(1);
+    lapackint lwork = cast(lapackint) work.length!0;
+    lapackint info;
+    lapack.hseqr_(job,compz,n,ilo,ihi,h.iterator, ldh, wr.iterator, wi.iterator, z.iterator, ldz, work.iterator, lwork, info);
     assert(info >= 0);
     return cast(size_t)info;
 }
 
 unittest
 {
-    alias f = hseqr!(float, cfloat);
-    alias d = hseqr!(double, cdouble);
-    alias s = hseqr!(cfloat, cfloat);
-    alias c = hseqr!(cdouble, cdouble);
+    alias f = hseqr!float;
+    alias d = hseqr!double;
+    alias s = hseqr!cfloat;
+    alias c = hseqr!cdouble;
 }
 
 size_t trevc(T)(char side,
