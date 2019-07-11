@@ -1755,7 +1755,7 @@ size_t hseqr(T, complexT)(
     lapackint* ilo,
     lapackint* ihi
 )
-    if ((isComplex!T && is(T == complexT)) || (!isComplex!T && is(T == realType!complexT))
+    if ((isComplex!T && is(T == complexT)) || (!isComplex!T && is(T == realType!complexT)))
 in
 {
     assert(job == 'E' || job == 'S', "hseqr");
