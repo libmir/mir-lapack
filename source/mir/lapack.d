@@ -1650,10 +1650,10 @@ do {
 
 unittest
 {
-    alias f = rhsein!(float);
-    alias d = rhsein!(double);
-    alias s = chsein!(cfloat,float);
-    alias c = chsein!(cdouble,double);
+    alias f = hsein!(float);
+    alias d = hsein!(double);
+    alias s = hsein!(cfloat,float);
+    alias c = hsein!(cdouble,double);
 }
 
 alias ormhr = unmhr;
@@ -1727,33 +1727,6 @@ size_t hseqr(T, complexT)(
     Slice!(T*) work,
     lapackint* ilo,
     lapackint* ihi
- )
-    if (!isComplex!T && is(realType!complexT == T))
-do
-{
-    lapackint n = cast(lapackint) h.length!0;
-    lapackint ldh = cast(lapackint) h._stride.max(1);
-    lapackint ldz = cast(lapackint) z._stride.max(1);
-    lapackint lwork = cast(lapackint) work.length!0;
-    lapackint info = void;
-    auto wr = mininitRcslice!T(w.length);
-    auto wi = mininitRcslice!T(w.length);
-    lapack.hseqr_(job,compz,n,ilo,ihi,h.iterator, ldh, wr.lightScope.iterator, wi.lightScope.iterator, z.iterator, ldz, work.iterator, lwork, info);
-    w[] = wr[] + (1i * wi[]);
-    assert(info >= 0);
-    return cast(size_t)info;
-
-}
-
-size_t hseqr(T, complexT)(
-    char job,
-    char compz,
-    Slice!(T*, 2, Canonical) h,
-    Slice!(complexT*) w,
-    Slice!(T*, 2, Canonical) z,
-    Slice!(T*) work,
-    lapackint* ilo,
-    lapackint* ihi
 )
     if ((isComplex!T && is(T == complexT)) || (!isComplex!T && is(T == realType!complexT)))
 in
@@ -1780,7 +1753,10 @@ do
     }
     else
     {
-        hseqr!(T,complexT)(job, compz, h, w.lightScope, z, work, ilo, ihi);
+    	auto wr = mininitRcslice!T(w.length);
+    	auto wi = mininitRcslice!T(w.length);
+    	lapack.hseqr_(job,compz,n,ilo,ihi,h.iterator, ldh, wr.lightScope.iterator, wi.lightScope.iterator, z.iterator, ldz, work.iterator, lwork, info);
+    	w[] = wr[] + (1i * wi[]);
     }
     assert(info >= 0);
     return cast(size_t)info;
