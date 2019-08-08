@@ -1576,7 +1576,7 @@ do
     lapackint ldvl = cast(lapackint) vl._stride.max(1);
     lapackint ldvr = cast(lapackint) vr._stride.max(1);
     //need to seperate these methods then probably provide a wrap which does this as that's the easiest way without bloating the base methods
-    lapack.hsein_(side, eigsrc, initv, select, n, h.iterator, ldh, wr.iterator, wi.iterator, vl.iterator, ldvl, vr.iterator, ldvr, &mm, *m, work.iterator, ifaill, ifailr, info);
+    lapack.hsein_(side, eigsrc, initv, select, n, h.iterator, ldh, wr.iterator, wi.iterator, vl.iterator, ldvl, vr.iterator, ldvr, mm, *m, work.iterator, ifaill, ifailr, info);
     assert(info >= 0);
     ///if any of ifaill or ifailr entries are non-zero then that has failed to converge.
     ///ifail?[i] = j > 0 if the eigenvector stored in the i-th column of v?, coresponding to the jth eigenvalue, fails to converge.
@@ -1638,7 +1638,7 @@ do {
     lapackint mm = cast(lapackint) vl.length!1;
     lapackint info = void;
     //could compute mm and m from vl and/or vr and T
-    lapack.hsein_(side, eigsrc, initv, select, n, h.iterator, ldh, w.iterator, vl.iterator, ldvl, vr.iterator, ldvr, &mm, *m, work.iterator, rwork.iterator, ifaill, ifailr, info);
+    lapack.hsein_(side, eigsrc, initv, select, n, h.iterator, ldh, w.iterator, vl.iterator, ldvl, vr.iterator, ldvr, mm, *m, work.iterator, rwork.iterator, ifaill, ifailr, info);
     assert(info >= 0);
     ///if any of ifaill or ifailr entries are non-zero then that has failed to converge.
     ///ifail?[i] = j > 0 if the eigenvector stored in the i-th column of v?, coresponding to the jth eigenvalue, fails to converge.
@@ -1814,10 +1814,10 @@ do
     //select should be lapack_logical
     lapackint info;
     static if(!isComplex!T){
-        lapack.trevc_(side, howmany, &select, n, t.iterator, ldt, vl.iterator, ldvl, vr.iterator, ldvr, &mm, *m, work.iterator, info);
+        lapack.trevc_(side, howmany, &select, n, t.iterator, ldt, vl.iterator, ldvl, vr.iterator, ldvr, mm, *m, work.iterator, info);
     }
     else {
-        lapack.trevc_(side, howmany, &select, n, t.iterator, ldt, vl.iterator, ldvl, vr.iterator, ldvr, &mm, *m, work.iterator, null, info);
+        lapack.trevc_(side, howmany, &select, n, t.iterator, ldt, vl.iterator, ldvl, vr.iterator, ldvr, mm, *m, work.iterator, null, info);
     }
     assert(info >= 0);
     return cast(size_t)info;
