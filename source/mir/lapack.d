@@ -1520,16 +1520,16 @@ size_t hsein(T)(
     char side,
     char eigsrc,
     char initv,
-    lapackint* select, //actually a logical bitset stored in here
+    ref lapackint select, //actually a logical bitset stored in here
     Slice!(T*, 2, Canonical) h,
     Slice!(T*) wr,
     Slice!(T*) wi,
     Slice!(T*, 2, Canonical) vl,
     Slice!(T*, 2, Canonical) vr,
-    lapackint* m,
+    ref lapackint m,
     Slice!(T*) work,
-    lapackint* ifaill,
-    lapackint* ifailr,
+    ref lapackint ifaill,
+    ref lapackint ifailr,
 )
     if (!isComplex!T)
 in
