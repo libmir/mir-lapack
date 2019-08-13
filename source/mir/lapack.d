@@ -1488,8 +1488,8 @@ size_t gehrd(T)(
     Slice!(T*, 2, Canonical) a,
     Slice!(T*) tau,
     Slice!(T*) work,
-    lapackint* ilo,
-    lapackint* ihi
+    lapackint ilo,
+    lapackint ihi
 )
 in
 {
@@ -1530,8 +1530,6 @@ size_t hsein(T)(
     Slice!(T*) work,
     lapackint* ifaill,
     lapackint* ifailr,
-    lapackint* ilo,
-    lapackint* ihi,
 )
     if (!isComplex!T)
 in
@@ -1599,8 +1597,6 @@ size_t hsein(T, realT)(
     Slice!(realT*) rwork,
     lapackint* ifaill,
     lapackint* ifailr,
-    lapackint* ilo,
-    lapackint* ihi,
 )
     if (isComplex!T && is(realType!T == realT))
 in
@@ -1725,8 +1721,8 @@ size_t hseqr(T)(
     Slice!(T*) w,
     Slice!(T*, 2, Canonical) z,
     Slice!(T*) work,
-    lapackint* ilo,
-    lapackint* ihi
+    lapackint ilo,
+    lapackint ihi
 )
     if (isComplex!T)
 in
@@ -1760,8 +1756,8 @@ size_t hseqr(T)(
     Slice!(T*) wi,
     Slice!(T*, 2, Canonical) z,
     Slice!(T*) work,
-    lapackint* ilo,
-    lapackint* ihi
+    lapackint ilo,
+    lapackint ihi
 )
     if (!isComplex!T)
 in
@@ -1863,8 +1859,8 @@ unittest
 size_t gebak(T, realT)(
     char job,
     char side,
-    lapackint* ilo,
-    lapackint* ihi,
+    lapackint ilo,
+    lapackint ihi,
     Slice!(realT*) scale,
     Slice!(T*, 2, Canonical) v
 )
