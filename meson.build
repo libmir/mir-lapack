@@ -8,7 +8,7 @@ if not cc.find_library('openblas', required : false).found()
     lapack_deps = [cc.find_library('lapack')]
 endif
 
-subprojects = ['cblas', 'lapack', 'mir-core', 'mir-algorithm', 'mir-blas']
+subprojects = ['cblas-d', 'lapack-d', 'mir-core', 'mir-algorithm', 'mir-blas']
 
 has_cpp_headers = false
 
