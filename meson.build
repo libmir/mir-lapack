@@ -8,7 +8,7 @@ if not cc.find_library('openblas', required : false).found()
     lapack_deps = [cc.find_library('lapack')]
 endif
 
-subprojects = ['mir-core', 'mir-algorithm', 'mir-blas']
+subprojects = ['cblas', 'lapack', 'mir-core', 'mir-algorithm', 'mir-blas']
 
 has_cpp_headers = false
 
@@ -26,13 +26,10 @@ add_project_arguments([
     '-lowmem',
 ], language: 'd')
 
-required_deps = lapack_deps + [
-    dependency('cblas-d', fallback : ['cblas', 'cblas_dep']),
-    dependency('lapack-d', fallback : ['lapack', 'lapack_dep']),
-    ]
+required_deps = lapack_deps
 
 foreach p : subprojects 
-    required_deps += dependency(p, fallback : [p, p.underscorify() + '_dep'])
+    required_deps += dependency(p, fallback : [p, 'this_dep'])
 endforeach
 
 directories = ['source']
